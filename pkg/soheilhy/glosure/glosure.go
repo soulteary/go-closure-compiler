@@ -7,13 +7,11 @@ package glosure
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
 	"path"
@@ -293,53 +291,6 @@ func (cc *Compiler) CompileWithClosureJar(jsFiles []string, entryPkgs []string,
 	return err
 }
 
-func (cc *Compiler) CompileWithClosureApi(jsFiles []string, entryPkgs []string,
-	outPath string) error {
-	var srcBuffer bytes.Buffer
-	for _, file := range jsFiles {
-		content, err := ioutil.ReadFile(file)
-		if err != nil {
-			// We should never reach this line. This is just an assert.
-			panic("Cannot read a file: " + file)
-		}
-		srcBuffer.Write(content)
-	}
-
-	var extBuffer bytes.Buffer
-	for _, file := range cc.Externs {
-		content, err := ioutil.ReadFile(file)
-		if err != nil {
-			panic("Cannot read an extern file: " + file)
-		}
-		extBuffer.Write(content)
-	}
-
-	res, err := cc.dialClosureApi(srcBuffer.String(), extBuffer.String())
-	if err != nil {
-		return err
-	}
-
-	if len(res.Errors) != 0 {
-		for _, cErr := range res.Errors {
-			fmt.Fprintf(os.Stderr, "Compilation error: %s\n\t%s\n\t%s\n",
-				cErr.Error, cErr.Line, errAnchor(cErr.Charno))
-
-		}
-		return errors.New("Compilation error.")
-	}
-
-	if len(res.Warnings) != 0 {
-		for _, cWarn := range res.Warnings {
-			fmt.Fprintf(os.Stderr, "Compilation warning: %s\n\t%s\n\t%s\n",
-				cWarn.Warning, cWarn.Line, errAnchor(cWarn.Charno))
-		}
-	}
-
-	ioutil.WriteFile(outPath, []byte(res.CompiledCode), 0644)
-
-	return nil
-}
-
 func errAnchor(charNo int) string {
 	indent := charNo - 1
 	if indent < 0 {
@@ -420,46 +371,6 @@ type ClosureWarning struct {
 	WarningType string `json:"type"`
 	Warning     string
 	Line        string
-}
-
-func (cc *Compiler) getClosureApiParams(src string, ext string) url.Values {
-	params := make(url.Values)
-	params.Set("js_code", src)
-
-	if len(ext) > 0 {
-		params.Set("js_externs", ext)
-	}
-
-	params.Set("output_format", "json")
-	params.Add("output_info", "compiled_code")
-	params.Add("output_info", "warnings")
-	params.Add("output_info", "errors")
-	params.Set("warning_level", string(cc.WarningLevel))
-	params.Set("compilation_level", string(cc.CompilationLevel))
-	return params
-}
-
-func (cc *Compiler) dialClosureApi(src string, ext string) (*ClosureApiResult,
-	error) {
-	const URL = "http://closure-compiler.appspot.com/compile"
-
-	params := cc.getClosureApiParams(src, ext)
-	resp, err := http.PostForm(URL, params)
-	if err != nil {
-		return nil, errors.New("Cannot send a compilation request to " + URL)
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, errors.New("Cannot read response body.")
-	}
-
-	result := &ClosureApiResult{}
-	json.Unmarshal(body, &result)
-
-	return result, nil
 }
 
 var closureProvideRegex *regexp.Regexp
