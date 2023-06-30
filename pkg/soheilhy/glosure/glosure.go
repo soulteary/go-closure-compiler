@@ -91,12 +91,9 @@ const (
 	ConstantProperty            = "constantProperty"
 	Deprecated                  = "deprecated"
 	DuplicateMessage            = "duplicateMessage"
-	Es3                         = "es3"
 	Es5Strict                   = "es5Strict"
 	ExternsValidation           = "externsValidation"
-	FileoverviewTags            = "fileoverviewTags"
 	GlobalThis                  = "globalThis"
-	InternetExplorerChecks      = "internetExplorerChecks"
 	InvalidCasts                = "invalidCasts"
 	MisplacedTypeAnnotation     = "misplacedTypeAnnotation"
 	MissingProperties           = "missingProperties"
@@ -192,8 +189,8 @@ func (cc *Compiler) Strict() {
 	cc.CompErrors = []WarningClass{
 		AccessControls,
 		CheckRegExp, CheckStructDictInheritance, CheckTypes, CheckVars, Const,
-		ConstantProperty, Deprecated, DuplicateMessage, Es3, Es5Strict,
-		ExternsValidation, FileoverviewTags, GlobalThis, InternetExplorerChecks,
+		ConstantProperty, Deprecated, DuplicateMessage, Es5Strict,
+		ExternsValidation, GlobalThis,
 		InvalidCasts, MisplacedTypeAnnotation, MissingProperties, MissingProvide,
 		MissingRequire, MissingReturn, NonStandardJsDocs,
 		SuspiciousCode, StrictModuleDepCheck, TypeInvalidation, UndefinedNames,
@@ -210,8 +207,8 @@ func (cc *Compiler) Debug() {
 	cc.CompWarnings = []WarningClass{
 		AccessControls,
 		CheckRegExp, CheckStructDictInheritance, CheckTypes, CheckVars, Const,
-		ConstantProperty, Deprecated, DuplicateMessage, Es3, Es5Strict,
-		ExternsValidation, FileoverviewTags, GlobalThis, InternetExplorerChecks,
+		ConstantProperty, Deprecated, DuplicateMessage, Es5Strict,
+		ExternsValidation, GlobalThis,
 		InvalidCasts, MisplacedTypeAnnotation, MissingProperties, MissingProvide,
 		MissingRequire, MissingReturn, NonStandardJsDocs,
 		SuspiciousCode, StrictModuleDepCheck, TypeInvalidation, UndefinedNames,
