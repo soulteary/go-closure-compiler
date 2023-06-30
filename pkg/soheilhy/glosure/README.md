@@ -29,13 +29,6 @@ http.Handle("/", glosure.GlosureServerWithRoot("./example/js/"))
 http.ListenAndServe(":8080", nil);
 ```
 
-Or to enforce using the closure REST API:
-```go
-cc := glosure.NewCompiler("./example/js/")
-cc.UseClosureApi = true
-http.Handle("/", glosure.GlosureServer(cc))
-http.ListenAndServe(":8080", nil);
-```
 
 ```GlosureServer``` serves only the requests for compiled
 JavaScript (by default ```*.min.js```) and returns error otherwise.

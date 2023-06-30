@@ -71,21 +71,6 @@ func TestCompilerJar(t *testing.T) {
 	}
 }
 
-func TestCompilerApi(t *testing.T) {
-	cc := NewCompiler("./test_resources")
-	cc.UseClosureApi = true
-	err := cc.Compile("pkg1.min.js")
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	_, err = ioutil.ReadFile("./test_resources/pkg1.min.js")
-	if err != nil {
-		t.Error(err)
-	}
-}
-
 func Example() {
 	// Parse the flags if you want to use glog.
 	flag.Parse()

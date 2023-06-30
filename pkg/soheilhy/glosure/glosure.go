@@ -138,10 +138,6 @@ type Compiler struct {
 	// Compile source javascripts if not compiled or out of date.
 	CompileOnDemand bool
 
-	// Whether to use closure REST api instead of closure jar file. This is
-	// automatically set to true when java is not installed on the machine.
-	UseClosureApi bool
-
 	// Closure compiler compilation level. Valid levels are: WhiteSpaceOnly,
 	// SimpleOptimizations (default), AdvancedOptimizations.
 	CompilationLevel CompilationLevel
@@ -177,7 +173,6 @@ type Compiler struct {
 }
 
 func NewCompiler(root string) Compiler {
-	_, javaLookupErr := exec.LookPath("java")
 	return Compiler{
 		Root:             root,
 		ErrorHandler:     http.NotFound,
@@ -186,7 +181,6 @@ func NewCompiler(root string) Compiler {
 		WarningLevel:     Default,
 		SourceSuffix:     DefaultSourceSuffix,
 		CompileOnDemand:  true,
-		UseClosureApi:    javaLookupErr != nil,
 		fileServer:       http.FileServer(http.Dir(root)),
 		depg:             depgraph.New(),
 		mutex:            sync.Mutex{},
@@ -362,17 +356,15 @@ func (cc *Compiler) downloadCompilerJar() (string, error) {
 }
 
 func (cc *Compiler) Compile(relOutPath string) error {
-	if !cc.UseClosureApi {
-		_, err := exec.LookPath("java")
-		if err != nil {
-			glog.Fatal("No java found in $PATH.")
-		}
+	_, err := exec.LookPath("java")
+	if err != nil {
+		glog.Fatal("No java found in $PATH.")
+	}
 
-		if cc.CompilerJarPath == "" {
-			cc.CompilerJarPath, err = cc.downloadCompilerJar()
-			if err != nil {
-				glog.Fatal("Cannot download the closure compiler.")
-			}
+	if cc.CompilerJarPath == "" {
+		cc.CompilerJarPath, err = cc.downloadCompilerJar()
+		if err != nil {
+			glog.Fatal("Cannot download the closure compiler.")
 		}
 	}
 
@@ -407,10 +399,6 @@ func (cc *Compiler) Compile(relOutPath string) error {
 		}
 	} else {
 		jsFiles = append(jsFiles, srcPath)
-	}
-
-	if cc.UseClosureApi {
-		return cc.CompileWithClosureApi(jsFiles, nil, outPath)
 	}
 
 	return cc.CompileWithClosureJar(jsFiles, srcPkgs, outPath)

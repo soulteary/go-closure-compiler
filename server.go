@@ -29,7 +29,6 @@ import (
 func main() {
   debug := flag.Bool("debug", false, "run the compiler in debug mode.")
   advanced := flag.Bool("advanced", false, "use advanced optimizations.")
-  noJava := flag.Bool("nojava", false, "use closure rest api instead of java.")
 
   // Parse the flags if you want to use glog.
   flag.Parse()
@@ -48,8 +47,6 @@ func main() {
     // Use advanced optimizations.
     cc.CompilationLevel = glosure.AdvancedOptimizations
   }
-
-  cc.UseClosureApi = *noJava
 
   http.Handle("/", glosure.GlosureServer(cc))
   fmt.Println("Checkout http://localhost:8080/sample.min.js?force=1")
