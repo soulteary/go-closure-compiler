@@ -113,8 +113,7 @@ func (n *Node) isRecursivelyDependentOn(pkg string) bool {
 	return n.isRecursivelyDependentOnWithCache(pkg, make([]*Node, 0))
 }
 
-func (n *Node) isRecursivelyDependentOnWithCache(pkg string,
-	checked []*Node) bool {
+func (n *Node) isRecursivelyDependentOnWithCache(pkg string, checked []*Node) bool {
 	if pkg == n.Pkg {
 		return true
 	}
