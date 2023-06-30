@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
@@ -302,7 +301,7 @@ func errAnchor(charNo int) string {
 func concatContent(nodes []*depgraph.Node) string {
 	var buffer bytes.Buffer
 	for _, val := range nodes {
-		content, err := ioutil.ReadFile(val.Path)
+		content, err := os.ReadFile(val.Path)
 		if err != nil {
 			// TODO(soheil): Should we simply ignore such errors?
 			continue
@@ -393,7 +392,7 @@ func init() {
 }
 
 func getClosurePackage(path string) ([]string, error) {
-	content, err := ioutil.ReadFile(path)
+	content, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
@@ -411,7 +410,7 @@ func getClosurePackage(path string) ([]string, error) {
 }
 
 func getClosureDependecies(path string) ([]string, error) {
-	content, err := ioutil.ReadFile(path)
+	content, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}

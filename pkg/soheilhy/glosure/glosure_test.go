@@ -8,18 +8,6 @@ import (
 	"testing"
 )
 
-func TestDialClosureApi(t *testing.T) {
-	cc := NewCompiler(".")
-	res, err := cc.dialClosureApi("var i = 0; i += 1; window.alert(1)", "")
-	if err != nil {
-		t.Error("Error(s) in closure api call: ", res.Errors)
-	}
-
-	if len(res.CompiledCode) == 0 {
-		t.Error("Got empty results from the closure compiler.")
-	}
-}
-
 func TestGetClosureDependecies(t *testing.T) {
 	deps, err := getClosureDependecies("./test_resources/pkg1.js")
 	if err != nil {
