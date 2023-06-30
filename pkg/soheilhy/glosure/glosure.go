@@ -20,7 +20,6 @@
 package glosure
 
 import (
-	"archive/zip"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -184,58 +183,6 @@ func (cc *Compiler) jsIsAlreadyCompiled(path string) bool {
 	return true
 }
 
-func (cc *Compiler) downloadCompilerJar() (string, error) {
-	const ccJarPath = "__compiler__.jar"
-	const ccDlUrl = "http://dl.google.com/closure-compiler/compiler-latest.zip"
-
-	jarFilePath := filepath.Join(cc.Root, ccJarPath)
-	_, err := os.Stat(jarFilePath)
-	if err == nil {
-		return jarFilePath, nil
-	}
-
-	glog.Info("Downloading closure compiler from: ", ccDlUrl)
-
-	zipFilePath := filepath.Join(cc.Root, "__compiler__.zip")
-	zipFile, err := os.Create(zipFilePath)
-	defer zipFile.Close()
-
-	res, err := http.Get(ccDlUrl)
-	defer res.Body.Close()
-
-	// TODO(soheil): Maybe verify checksum?
-	_, err = io.Copy(zipFile, res.Body)
-	if err != nil {
-		return "", err
-	}
-
-	r, err := zip.OpenReader(zipFilePath)
-	if err != nil {
-		return "", err
-	}
-
-	defer r.Close()
-	for _, f := range r.File {
-		if f.Name != "compiler.jar" {
-			continue
-		}
-
-		cmpJar, err := f.Open()
-		if err != nil {
-			return "", err
-		}
-
-		jarFile, err := os.Create(jarFilePath)
-		defer jarFile.Close()
-
-		glog.V(1).Info("Decompressing compiler.jar to ", jarFilePath)
-		io.Copy(jarFile, cmpJar)
-		break
-	}
-
-	return jarFilePath, nil
-}
-
 func (cc *Compiler) Compile(relOutPath string) error {
 	_, err := exec.LookPath("java")
 	if err != nil {
@@ -243,10 +190,7 @@ func (cc *Compiler) Compile(relOutPath string) error {
 	}
 
 	if cc.CompilerJarPath == "" {
-		cc.CompilerJarPath, err = cc.downloadCompilerJar()
-		if err != nil {
-			glog.Fatal("Cannot download the closure compiler.")
-		}
+		glog.Fatal("download the closure compiler jar file from https://github.com/google/closure-compiler/tags and put it to js/__compiler__.jar .")
 	}
 
 	srcPath := cc.getSourceJavascriptPath(relOutPath)
