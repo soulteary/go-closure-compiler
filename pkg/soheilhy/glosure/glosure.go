@@ -104,7 +104,6 @@ const (
 	SuspiciousCode              = "suspiciousCode"
 	StrictModuleDepCheck        = "strictModuleDepCheck"
 	TypeInvalidation            = "typeInvalidation"
-	UndefinedNames              = "undefinedNames"
 	UndefinedVars               = "undefinedVars"
 	UnknownDefines              = "unknownDefines"
 	UselessCode                 = "uselessCode"
@@ -192,7 +191,7 @@ func (cc *Compiler) Strict() {
 		ExternsValidation, GlobalThis,
 		InvalidCasts, MisplacedTypeAnnotation, MissingProperties, MissingProvide,
 		MissingRequire, MissingReturn, NonStandardJsDocs,
-		SuspiciousCode, StrictModuleDepCheck, TypeInvalidation, UndefinedNames,
+		SuspiciousCode, StrictModuleDepCheck, TypeInvalidation,
 		UndefinedVars, UnknownDefines, UselessCode, Visibility,
 	}
 	cc.CompWarnings = []WarningClass{}
@@ -210,7 +209,7 @@ func (cc *Compiler) Debug() {
 		ExternsValidation, GlobalThis,
 		InvalidCasts, MisplacedTypeAnnotation, MissingProperties, MissingProvide,
 		MissingRequire, MissingReturn, NonStandardJsDocs,
-		SuspiciousCode, StrictModuleDepCheck, TypeInvalidation, UndefinedNames,
+		SuspiciousCode, StrictModuleDepCheck, TypeInvalidation,
 		UndefinedVars, UnknownDefines, UselessCode, Visibility,
 	}
 	cc.CompErrors = []WarningClass{}
