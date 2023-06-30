@@ -84,7 +84,6 @@ type WarningClass string
 const (
 	AccessControls              = "accessControls"
 	CheckRegExp                 = "checkRegExp"
-	CheckStructDictInheritance  = "checkStructDictInheritance"
 	CheckTypes                  = "checkTypes"
 	CheckVars                   = "checkVars"
 	Const                       = "const"
@@ -188,7 +187,7 @@ func (cc *Compiler) Strict() {
 	// All of warning classes, except the unknown type.
 	cc.CompErrors = []WarningClass{
 		AccessControls,
-		CheckRegExp, CheckStructDictInheritance, CheckTypes, CheckVars, Const,
+		CheckRegExp, CheckTypes, CheckVars, Const,
 		ConstantProperty, Deprecated, DuplicateMessage, Es5Strict,
 		ExternsValidation, GlobalThis,
 		InvalidCasts, MisplacedTypeAnnotation, MissingProperties, MissingProvide,
@@ -206,7 +205,7 @@ func (cc *Compiler) Debug() {
 	// All of warning classes, except the unknown type.
 	cc.CompWarnings = []WarningClass{
 		AccessControls,
-		CheckRegExp, CheckStructDictInheritance, CheckTypes, CheckVars, Const,
+		CheckRegExp, CheckTypes, CheckVars, Const,
 		ConstantProperty, Deprecated, DuplicateMessage, Es5Strict,
 		ExternsValidation, GlobalThis,
 		InvalidCasts, MisplacedTypeAnnotation, MissingProperties, MissingProvide,
