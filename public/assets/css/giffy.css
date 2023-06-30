@@ -1,0 +1,1552 @@
+.CodeMirror {
+  font-family: monospace;
+  height: 300px;
+  color: black;
+  direction: ltr;
+}
+
+.CodeMirror-lines {
+  padding: 4px 0;
+}
+
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  padding: 0 4px;
+}
+
+.CodeMirror-scrollbar-filler,
+.CodeMirror-gutter-filler {
+  background-color: white;
+}
+
+.CodeMirror-gutters {
+  border-right: 1px solid #ddd;
+  background-color: #f7f7f7;
+  white-space: nowrap;
+}
+
+.CodeMirror-linenumber {
+  padding: 0 3px 0 5px;
+  min-width: 20px;
+  text-align: right;
+  color: #999;
+  white-space: nowrap;
+}
+
+.CodeMirror-guttermarker {
+  color: black;
+}
+
+.CodeMirror-guttermarker-subtle {
+  color: #999;
+}
+
+.CodeMirror-cursor {
+  border-left: 1px solid black;
+  border-right: none;
+  width: 0;
+}
+
+.CodeMirror div.CodeMirror-secondarycursor {
+  border-left: 1px solid silver;
+}
+
+.cm-fat-cursor .CodeMirror-cursor {
+  width: auto;
+  border: 0 !important;
+  background: #7e7;
+}
+
+.cm-fat-cursor div.CodeMirror-cursors {
+  z-index: 1;
+}
+
+.cm-fat-cursor .CodeMirror-line::-moz-selection,
+.cm-fat-cursor .CodeMirror-line > span::-moz-selection,
+.cm-fat-cursor .CodeMirror-line > span > span::-moz-selection {
+  background: transparent;
+}
+
+.cm-fat-cursor .CodeMirror-line::selection,
+.cm-fat-cursor .CodeMirror-line > span::selection,
+.cm-fat-cursor .CodeMirror-line > span > span::selection {
+  background: transparent;
+}
+
+.cm-fat-cursor .CodeMirror-line::-moz-selection,
+.cm-fat-cursor .CodeMirror-line > span::-moz-selection,
+.cm-fat-cursor .CodeMirror-line > span > span::-moz-selection {
+  background: transparent;
+}
+
+.cm-fat-cursor {
+  caret-color: transparent;
+}
+
+@-webkit-keyframes blink {
+  50% {
+    background-color: transparent;
+  }
+}
+
+@-o-keyframes blink {
+  50% {
+    background-color: transparent;
+  }
+}
+
+@keyframes blink {
+  50% {
+    background-color: transparent;
+  }
+}
+
+.cm-tab {
+  display: inline-block;
+  text-decoration: inherit;
+}
+
+.CodeMirror-rulers {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -50px;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.CodeMirror-ruler {
+  border-left: 1px solid #ccc;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+}
+
+.cm-s-default .cm-header {
+  color: blue;
+}
+
+.cm-s-default .cm-quote {
+  color: #090;
+}
+
+.cm-negative {
+  color: #d44;
+}
+
+.cm-positive {
+  color: #292;
+}
+
+.cm-header,
+.cm-strong {
+  font-weight: bold;
+}
+
+.cm-em {
+  font-style: italic;
+}
+
+.cm-link {
+  text-decoration: underline;
+}
+
+.cm-strikethrough {
+  text-decoration: line-through;
+}
+
+.cm-s-default .cm-keyword {
+  color: #708;
+}
+
+.cm-s-default .cm-atom {
+  color: #219;
+}
+
+.cm-s-default .cm-number {
+  color: #164;
+}
+
+.cm-s-default .cm-def {
+  color: #00f;
+}
+
+.cm-s-default .cm-variable-2 {
+  color: #05a;
+}
+
+.cm-s-default .cm-variable-3,
+.cm-s-default .cm-type {
+  color: #085;
+}
+
+.cm-s-default .cm-comment {
+  color: #a50;
+}
+
+.cm-s-default .cm-string {
+  color: #a11;
+}
+
+.cm-s-default .cm-string-2 {
+  color: #f50;
+}
+
+.cm-s-default .cm-meta,
+.cm-s-default .cm-qualifier {
+  color: #555;
+}
+
+.cm-s-default .cm-builtin {
+  color: #30a;
+}
+
+.cm-s-default .cm-bracket {
+  color: #997;
+}
+
+.cm-s-default .cm-tag {
+  color: #170;
+}
+
+.cm-s-default .cm-attribute {
+  color: #00c;
+}
+
+.cm-s-default .cm-hr {
+  color: #999;
+}
+
+.cm-s-default .cm-link {
+  color: #00c;
+}
+
+.cm-s-default .cm-error,
+.cm-invalidchar {
+  color: #f00;
+}
+
+.CodeMirror-composing {
+  border-bottom: 2px solid;
+}
+
+div.CodeMirror span.CodeMirror-matchingbracket {
+  color: #0b0;
+}
+
+div.CodeMirror span.CodeMirror-nonmatchingbracket {
+  color: #a22;
+}
+
+.CodeMirror-matchingtag {
+  background: rgba(255, 150, 0, 0.3);
+}
+
+.CodeMirror-activeline-background {
+  background: #e8f2ff;
+}
+
+.CodeMirror {
+  position: relative;
+  overflow: hidden;
+  background: white;
+}
+
+.CodeMirror-scroll {
+  overflow: scroll !important;
+  margin-bottom: -50px;
+  margin-right: -50px;
+  padding-bottom: 50px;
+  height: 100%;
+  outline: none;
+  position: relative;
+  z-index: 0;
+}
+
+.CodeMirror-sizer {
+  position: relative;
+  border-right: 50px solid transparent;
+}
+
+.CodeMirror-vscrollbar,
+.CodeMirror-hscrollbar,
+.CodeMirror-scrollbar-filler,
+.CodeMirror-gutter-filler {
+  position: absolute;
+  z-index: 6;
+  display: none;
+  outline: none;
+}
+
+.CodeMirror-vscrollbar {
+  right: 0;
+  top: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.CodeMirror-hscrollbar {
+  bottom: 0;
+  left: 0;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+
+.CodeMirror-scrollbar-filler {
+  right: 0;
+  bottom: 0;
+}
+
+.CodeMirror-gutter-filler {
+  left: 0;
+  bottom: 0;
+}
+
+.CodeMirror-gutters {
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-height: 100%;
+  z-index: 3;
+}
+
+.CodeMirror-gutter {
+  white-space: normal;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: -50px;
+}
+
+.CodeMirror-gutter-wrapper {
+  position: absolute;
+  z-index: 4;
+  background: none !important;
+  border: none !important;
+}
+
+.CodeMirror-gutter-background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 4;
+}
+
+.CodeMirror-gutter-elt {
+  position: absolute;
+  cursor: default;
+  z-index: 4;
+}
+
+.CodeMirror-gutter-wrapper ::selection {
+  background-color: transparent;
+}
+
+.CodeMirror-gutter-wrapper ::-moz-selection {
+  background-color: transparent;
+}
+
+.CodeMirror-lines {
+  cursor: text;
+  min-height: 1px;
+}
+
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  border-width: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;
+  white-space: pre;
+  word-wrap: normal;
+  line-height: inherit;
+  color: inherit;
+  z-index: 2;
+  position: relative;
+  overflow: visible;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-variant-ligatures: contextual;
+  -moz-font-variant-ligatures: contextual;
+  font-variant-ligatures: contextual;
+}
+
+.CodeMirror-wrap pre.CodeMirror-line,
+.CodeMirror-wrap pre.CodeMirror-line-like {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: normal;
+}
+
+.CodeMirror-linebackground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.CodeMirror-linewidget {
+  position: relative;
+  z-index: 2;
+  padding: 0.1px;
+}
+
+.CodeMirror-rtl pre {
+  direction: rtl;
+}
+
+.CodeMirror-code {
+  outline: none;
+}
+
+.CodeMirror-scroll,
+.CodeMirror-sizer,
+.CodeMirror-gutter,
+.CodeMirror-gutters,
+.CodeMirror-linenumber {
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+.CodeMirror-measure {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.CodeMirror-cursor {
+  position: absolute;
+  pointer-events: none;
+}
+
+.CodeMirror-measure pre {
+  position: static;
+}
+
+div.CodeMirror-cursors {
+  visibility: hidden;
+  position: relative;
+  z-index: 3;
+}
+
+div.CodeMirror-dragcursors {
+  visibility: visible;
+}
+
+.CodeMirror-focused div.CodeMirror-cursors {
+  visibility: visible;
+}
+
+.CodeMirror-selected {
+  background: #d9d9d9;
+}
+
+.CodeMirror-focused .CodeMirror-selected {
+  background: #d7d4f0;
+}
+
+.CodeMirror-crosshair {
+  cursor: crosshair;
+}
+
+.CodeMirror-line::-moz-selection,
+.CodeMirror-line > span::-moz-selection,
+.CodeMirror-line > span > span::-moz-selection {
+  background: #d7d4f0;
+}
+
+.CodeMirror-line::selection,
+.CodeMirror-line > span::selection,
+.CodeMirror-line > span > span::selection {
+  background: #d7d4f0;
+}
+
+.CodeMirror-line::-moz-selection,
+.CodeMirror-line > span::-moz-selection,
+.CodeMirror-line > span > span::-moz-selection {
+  background: #d7d4f0;
+}
+
+.cm-searching {
+  background-color: #ffa;
+  background-color: rgba(255, 255, 0, 0.4);
+}
+
+.cm-force-border {
+  padding-right: 0.1px;
+}
+
+@media print {
+  .CodeMirror div.CodeMirror-cursors {
+    visibility: hidden;
+  }
+}
+
+.cm-tab-wrap-hack:after {
+  content: "";
+}
+
+span.CodeMirror-selectedtext {
+  background: none;
+}
+
+.goog-button {
+  color: #036;
+  border-color: #036;
+  background-color: #69c;
+}
+
+.goog-button-disabled {
+  border-color: #333;
+  color: #333;
+  background-color: #999;
+}
+
+.goog-button-hover {
+  color: #369;
+  border-color: #369;
+  background-color: #9cf;
+}
+
+.goog-button-active {
+  color: #69c;
+  border-color: #69c;
+}
+
+.goog-flat-button {
+  position: relative;
+  margin: 2px;
+  border: 1px solid #000;
+  padding: 2px 6px;
+  font: normal 13px "Trebuchet MS", Tahoma, Arial, sans-serif;
+  color: #fff;
+  background-color: #8c2425;
+  cursor: pointer;
+  outline: none;
+}
+
+.goog-flat-button-disabled {
+  border-color: #888;
+  color: #888;
+  background-color: #ccc;
+  cursor: default;
+}
+
+.goog-flat-button-hover {
+  border-color: #8c2425;
+  color: #8c2425;
+  background-color: #eaa4a5;
+}
+
+.goog-flat-button-active,
+.goog-flat-button-selected,
+.goog-flat-button-checked {
+  border-color: #5b4169;
+  color: #5b4169;
+  background-color: #d1a8ea;
+}
+
+.goog-flat-button-focused {
+  border-color: #5b4169;
+}
+
+.goog-flat-button-collapse-right {
+  margin-right: 0;
+}
+
+.goog-flat-button-collapse-left {
+  margin-left: 0;
+  border-left: none;
+}
+
+.goog-custom-button {
+  margin: 2px;
+  border: 0;
+  padding: 0;
+  font: normal Tahoma, Arial, sans-serif;
+  color: #000;
+  background: #ddd url(../img/button-bg.gif) repeat-x top left;
+  text-decoration: none;
+  list-style: none;
+  vertical-align: middle;
+  cursor: default;
+  outline: none;
+}
+
+.goog-custom-button-outer-box,
+.goog-custom-button-inner-box {
+  border-style: solid;
+  border-color: #aaa;
+  vertical-align: top;
+}
+
+.goog-custom-button-outer-box {
+  margin: 0;
+  border-width: 1px 0;
+  padding: 0;
+}
+
+.goog-custom-button-inner-box {
+  margin: 0 -1px;
+  border-width: 0 1px;
+  padding: 3px 4px;
+  white-space: nowrap;
+}
+
+* html .goog-custom-button-inner-box {
+  left: -1px;
+}
+
+* html .goog-custom-button-rtl .goog-custom-button-outer-box {
+  left: -1px;
+}
+
+* html .goog-custom-button-rtl .goog-custom-button-inner-box {
+  left: 0;
+}
+
+*:first-child + html .goog-custom-button-inner-box {
+  left: -1px;
+}
+
+*:first-child + html .goog-custom-button-rtl .goog-custom-button-inner-box {
+  left: 1px;
+}
+
+::root .goog-custom-button,
+::root .goog-custom-button-outer-box {
+  line-height: 0;
+}
+
+::root .goog-custom-button-inner-box {
+  line-height: normal;
+}
+
+.goog-custom-button-disabled {
+  background-image: none !important;
+  opacity: 0.4;
+  -moz-opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+
+.goog-custom-button-disabled .goog-custom-button-outer-box,
+.goog-custom-button-disabled .goog-custom-button-inner-box {
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+* html .goog-custom-button-disabled {
+  margin: 2px 1px !important;
+  padding: 0 1px !important;
+}
+
+*:first-child + html .goog-custom-button-disabled {
+  margin: 2px 1px !important;
+  padding: 0 1px !important;
+}
+
+.goog-custom-button-hover .goog-custom-button-outer-box,
+.goog-custom-button-hover .goog-custom-button-inner-box {
+  border-color: #9cf #69e #69e #7af !important;
+}
+
+.goog-custom-button-active,
+.goog-custom-button-checked {
+  background-color: #bbb;
+  background-position: bottom left;
+}
+
+.goog-custom-button-focused .goog-custom-button-outer-box,
+.goog-custom-button-focused .goog-custom-button-inner-box {
+  border-color: orange;
+}
+
+.goog-custom-button-collapse-right,
+.goog-custom-button-collapse-right .goog-custom-button-outer-box,
+.goog-custom-button-collapse-right .goog-custom-button-inner-box {
+  margin-right: 0;
+}
+
+.goog-custom-button-collapse-left,
+.goog-custom-button-collapse-left .goog-custom-button-outer-box,
+.goog-custom-button-collapse-left .goog-custom-button-inner-box {
+  margin-left: 0;
+}
+
+.goog-custom-button-collapse-left .goog-custom-button-inner-box {
+  border-left: 1px solid #fff;
+}
+
+.goog-custom-button-collapse-left.goog-custom-button-checked .goog-custom-button-inner-box {
+  border-left: 1px solid #ddd;
+}
+
+* html .goog-custom-button-collapse-left .goog-custom-button-inner-box {
+  left: 0;
+}
+
+*:first-child + html .goog-custom-button-collapse-left .goog-custom-button-inner-box {
+  left: 0;
+}
+
+.CodeMirror {
+  border: 1px solid #b8b8b8;
+}
+
+.goog-combobox {
+  border: 1px solid #b5b6b5;
+  background-color: #b5b6b5;
+  padding-right: 2.8ex;
+  font: normal small arial, helvetica, sans-serif;
+  cursor: pointer;
+  background: #ddd url(../img/button-bg.gif) repeat-x top left;
+}
+
+.goog-combobox input {
+  border: 0;
+  padding-left: 0.1ex;
+  border-right: 1px solid #b5b6b5;
+  color: #000;
+  background-color: #fff;
+  font: normal small arial, helvetica, sans-serif;
+  width: 30ex;
+}
+
+html > body .goog-combobox {
+  padding-bottom: 2px;
+}
+
+html > body .goog-combobox input {
+  position: relative;
+  top: 1px;
+}
+
+.goog-combobox input.label-input-label {
+  background-color: #fff;
+  color: #aaa;
+}
+
+.goog-combobox .goog-menu {
+  width: 33.2ex;
+  margin-top: -1px;
+  z-index: 1000;
+}
+
+html > body .goog-combobox .goog-menu {
+  width: 32.8ex;
+}
+
+.goog-combobox-button {
+  font-size: 10px;
+}
+
+.use-arrow .goog-combobox {
+  padding-right: 0.6ex;
+}
+
+body {
+  font: normal 10pt Arial, sans-serif;
+}
+
+html > body .goog-inline-block {
+  display: -moz-inline-box;
+  display: inline-block;
+}
+
+.goog-inline-block {
+  position: relative;
+  display: inline-block;
+}
+
+* html .goog-inline-block {
+  display: inline;
+}
+
+*:first-child + html .goog-inline-block {
+  display: inline;
+}
+
+body {
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  background-image: url(../img/top_bar_gradient.png);
+  background-repeat: repeat-x;
+}
+
+input {
+  vertical-align: text-bottom;
+}
+
+label {
+  vertical-align: bottom;
+}
+
+input,
+textarea,
+code,
+#output-text {
+  font-family: "Lucida Sans Typewriter", "Courier New", Courier, Fixed, monospace;
+}
+
+input,
+textarea,
+code {
+  font-size: 12px;
+}
+
+th {
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.input-header {
+  font-weight: normal;
+  padding-top: 6px;
+}
+
+.compiled-size-header {
+  padding-right: 10px;
+}
+
+#gbar {
+  float: left;
+  height: 31px;
+  padding: 4px 0 0 1px;
+  margin-left: 1ex;
+  font-size: 18px;
+}
+
+#logo {
+  padding: 5px 0 0 0;
+}
+
+#guser {
+  text-align: right;
+  position: absolute;
+  right: 4px;
+  top: 0;
+  white-space: nowrap;
+  padding: 10px 1px 0 0;
+  font-size: 13px;
+}
+
+#compile {
+  margin-right: 1em;
+}
+
+.compile-label {
+  padding: 0 8px;
+}
+
+#compile-status-message {
+  font-weight: bold;
+}
+
+.status-waiting {
+  color: #777;
+}
+
+.status-success {
+  color: #109618;
+}
+
+.status-has-warnings {
+  color: #f29000;
+}
+
+.status-failure {
+  color: #a00;
+}
+
+.goog-custom-button-checked.output-success,
+.goog-custom-button-checked.output-has-warnings,
+.goog-custom-button-checked.output-failure {
+  font-weight: bold;
+}
+
+.goog-tab {
+  width: 110px;
+}
+
+.goog-tab-selected {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)" !important;
+  filter: alpha(opacity=100) !important;
+  opacity: 1 !important;
+}
+
+#compiled-code.output-success {
+  background-color: #109618;
+}
+
+#warnings.output-has-warnings {
+  background-color: #f29000;
+}
+
+#errors.output-failure {
+  background-color: #a00;
+}
+
+#compiled-code.output-success,
+#warnings.output-has-warnings,
+#errors.output-failure {
+  color: white;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+  opacity: 0.5;
+}
+
+.goog-toggle-button .goog-custom-button-inner-box {
+  width: 7.5em;
+  text-align: center;
+}
+
+.link {
+  cursor: default;
+  text-decoration: underline;
+}
+
+a,
+.link {
+  color: #00e;
+}
+
+#content {
+  clear: both;
+}
+
+#input-pane,
+#output-pane {
+  padding: 5px;
+}
+
+html > body .goog-combobox input {
+  top: 0;
+}
+
+.goog-combobox input {
+  width: 50ex;
+  vertical-align: middle;
+}
+
+.example {
+  color: #333;
+  font-size: 11px;
+}
+
+.goog-splitpane {
+  height: 200px;
+  width: 300px;
+}
+
+.goog-splitpane-handle {
+  border-bottom: 1px solid #b8b8b8;
+  background: #eeeeee;
+  cursor: col-resize;
+  position: absolute;
+}
+
+.goog-splitpane-first-container,
+.goog-splitpane-second-container {
+  border-color: #b8b8b8;
+  border-style: solid;
+  overflow: auto;
+  position: absolute;
+}
+
+.goog-splitpane-first-container {
+  border-width: 0 1px 1px 0;
+}
+
+.goog-splitpane-second-container {
+  border-width: 0 0 1px 1px;
+}
+
+#tabs-content {
+  border: 1px solid #b8b8b8;
+}
+
+.goog-tab {
+  width: 120px;
+  text-align: center;
+}
+
+#source-code {
+  margin-top: 1em;
+}
+
+#output-heading {
+  padding: 0 6px;
+}
+
+#output-html {
+  font-size: 12px;
+  padding: 0 6px 12px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.new-api-key {
+  color: #a00;
+}
+
+.footer {
+  text-align: center;
+  color: #000;
+  height: 15px;
+  padding: 0.5em 0;
+}
+
+#library-list {
+  padding: 1px;
+  z-index: 1100;
+}
+
+.modal-dialog-bg {
+  position: absolute;
+  background-color: #999;
+  top: 0;
+  left: 0;
+}
+
+.modal-dialog {
+  position: absolute;
+  padding: 8px;
+  background-color: #c1d9ff;
+  border: 1px solid #3a5774;
+  font-family: arial, sans-serif;
+  width: 475px;
+  color: #000;
+  z-index: 3;
+}
+
+.modal-dialog a,
+.modal-dialog a:link,
+.modal-dialog a:visited {
+  color: #0066cc;
+  cursor: pointer;
+}
+
+.modal-dialog-title {
+  position: relative;
+  background-color: #e0edfe;
+  color: #000000;
+  padding: 8px 15px 8px 8px;
+  font-size: 12pt;
+  font-weight: bold;
+  vertical-align: middle;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.modal-dialog-title-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 15px;
+  height: 15px;
+  background: url(../img/dialog_close_box.gif) no-repeat center;
+  cursor: default;
+}
+
+.modal-dialog-content {
+  padding: 8px;
+  font-size: 100%;
+  background-color: #fff;
+}
+
+.modal-dialog-buttons {
+  padding: 8px;
+  background-color: #fff;
+}
+
+.goog-menu-button {
+  margin: 2px;
+  border: 0;
+  padding: 0;
+  font: normal Tahoma, Arial, sans-serif;
+  color: #000;
+  background: #ddd url(../img/button-bg.gif) repeat-x top left;
+  text-decoration: none;
+  list-style: none;
+  vertical-align: middle;
+  cursor: pointer;
+  outline: none;
+}
+
+.goog-menu-button-outer-box,
+.goog-menu-button-inner-box {
+  border-style: solid;
+  border-color: #aaa;
+  vertical-align: top;
+}
+
+.goog-menu-button-outer-box {
+  margin: 0;
+  border-width: 1px 0;
+  padding: 0;
+}
+
+.goog-menu-button-inner-box {
+  margin: 0 -1px;
+  border-width: 0 1px;
+  padding: 3px 4px;
+}
+
+* html .goog-menu-button-inner-box {
+  left: -1px;
+}
+
+* html .goog-menu-button-rtl .goog-menu-button-outer-box {
+  left: -1px;
+}
+
+* html .goog-menu-button-rtl .goog-menu-button-inner-box {
+  left: 0;
+}
+
+*:first-child + html .goog-menu-button-inner-box {
+  left: -1px;
+}
+
+*:first-child + html .goog-menu-button-rtl .goog-menu-button-inner-box {
+  left: 1px;
+}
+
+::root .goog-menu-button,
+::root .goog-menu-button-outer-box,
+::root .goog-menu-button-inner-box {
+  line-height: 0;
+}
+
+::root .goog-menu-button-caption,
+::root .goog-menu-button-dropdown {
+  line-height: normal;
+}
+
+.goog-menu-button-disabled {
+  background-image: none !important;
+  opacity: 0.4;
+  -moz-opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+
+.goog-menu-button-disabled .goog-menu-button-outer-box,
+.goog-menu-button-disabled .goog-menu-button-inner-box,
+.goog-menu-button-disabled .goog-menu-button-caption,
+.goog-menu-button-disabled .goog-menu-button-dropdown {
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+* html .goog-menu-button-disabled {
+  margin: 2px 1px !important;
+  padding: 0 1px !important;
+}
+
+*:first-child + html .goog-menu-button-disabled {
+  margin: 2px 1px !important;
+  padding: 0 1px !important;
+}
+
+.goog-menu-button-hover .goog-menu-button-outer-box,
+.goog-menu-button-hover .goog-menu-button-inner-box {
+  border-color: #9cf #69e #69e #7af !important;
+}
+
+.goog-menu-button-active,
+.goog-menu-button-open {
+  background-color: #bbb;
+  background-position: bottom left;
+}
+
+.goog-menu-button-focused .goog-menu-button-outer-box,
+.goog-menu-button-focused .goog-menu-button-inner-box {
+  border-color: orange;
+}
+
+.goog-menu-button-caption {
+  padding: 0 4px 0 0;
+  vertical-align: top;
+}
+
+.goog-menu-button-rtl .goog-menu-button-caption {
+  padding: 0 0 0 4px;
+}
+
+.goog-menu-button-dropdown {
+  width: 7px;
+  background: url(../img/toolbar_icons.gif) no-repeat -176px;
+  vertical-align: top;
+}
+
+.goog-flat-menu-button {
+  margin: 0 2px;
+  padding: 1px 4px;
+  font: normal 95% Tahoma, Arial, sans-serif;
+  color: #333;
+  text-decoration: none;
+  list-style: none;
+  vertical-align: middle;
+  cursor: pointer;
+  outline: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #c9c9c9;
+  background-color: #fff;
+}
+
+.goog-flat-menu-button-disabled * {
+  color: #999;
+  border-color: #ccc;
+  cursor: default;
+}
+
+.goog-flat-menu-button-hover,
+.goog-flat-menu-button-hover {
+  border-color: #9cf #69e #69e #7af !important;
+}
+
+.goog-flat-menu-button-active {
+  background-color: #bbb;
+  background-position: bottom left;
+}
+
+.goog-flat-menu-button-focused {
+  border-color: orange;
+}
+
+.goog-flat-menu-button-caption {
+  padding-right: 10px;
+  vertical-align: top;
+}
+
+.goog-flat-menu-button-dropdown {
+  width: 7px;
+  background: url(../img/toolbar_icons.gif) no-repeat -176px;
+  vertical-align: top;
+}
+
+.goog-menu {
+  background-color: #fff;
+  border-color: #ccc #666 #666 #ccc;
+  border-style: solid;
+  border-width: 1px;
+  cursor: default;
+  margin: 0;
+  outline: none;
+  padding: 4px 0;
+  position: absolute;
+}
+
+.goog-menuitem {
+  color: #000;
+  font: normal 12px Arial, sans-serif;
+  list-style: none;
+  margin: 0;
+  padding: 4px 10ex 4px 28px;
+  white-space: nowrap;
+}
+
+.goog-menuitem-rtl {
+  padding: 4px 28px 4px 10ex !important;
+}
+
+.goog-menuitem-disabled {
+  color: #ccc;
+}
+
+.goog-menuitem-highlight,
+.goog-menuitem-hover {
+  background-color: #d6e9f8;
+}
+
+.goog-menuitem-checkbox,
+.goog-menuitem-icon {
+  height: 16px;
+  left: 6px;
+  position: absolute;
+  width: 16px;
+}
+
+.goog-option-selected .goog-menuitem-checkbox,
+.goog-option-selected .goog-menuitem-icon {
+  background: transparent url(../img/check.gif) no-repeat center center;
+}
+
+.goog-menuitem-rtl .goog-menuitem-checkbox,
+.goog-menuitem-rtl .goog-menuitem-icon {
+  right: 6px;
+  left: auto;
+}
+
+.goog-menuitem-accel {
+  color: #999;
+  padding: 0 6px;
+  position: absolute;
+  right: 0;
+  text-align: right;
+}
+
+.goog-menuitem-rtl .goog-menuitem-accel {
+  left: 0;
+  right: auto;
+  text-align: left;
+}
+
+.goog-menuseparator {
+  border-top: 1px solid #ccc;
+  margin: 4px 0;
+  padding: 0;
+  position: relative;
+}
+
+.goog-submenu-arrow {
+  text-align: right;
+  position: absolute;
+  right: 0;
+  left: auto;
+}
+
+.goog-menuitem-rtl .goog-submenu-arrow {
+  text-align: left;
+  position: absolute;
+  left: 0;
+  right: auto;
+}
+
+.goog-menuitem-disabled .goog-submenu-arrow {
+  display: none;
+}
+
+.goog-menu-filter {
+  margin: 2px;
+  border: 1px solid silver;
+  background: white;
+  overflow: hidden;
+}
+
+.goog-menu-filter div {
+  color: gray;
+  position: absolute;
+  padding: 1px;
+}
+
+.goog-menu-filter input {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  width: 100%;
+}
+
+.goog-tristatemenuitem {
+  padding: 2px 5px;
+  margin: 0;
+  list-style: none;
+}
+
+.goog-tristatemenuitem-highlight {
+  background-color: #4279a5;
+  color: #fff;
+}
+
+.goog-tristatemenuitem-disabled {
+  color: #999;
+}
+
+.goog-tristatemenuitem-checkbox {
+  float: left;
+  width: 10px;
+  height: 1.1em;
+}
+
+.goog-tristatemenuitem-partially-checked {
+  background-image: url(../img/check-outline.gif);
+  background-position: 4px 50%;
+  background-repeat: no-repeat;
+}
+
+.goog-tristatemenuitem-fully-checked {
+  background-image: url(../img/check.gif);
+  background-position: 4px 50%;
+  background-repeat: no-repeat;
+}
+
+.goog-filterobsmenuitem {
+  padding: 2px 5px;
+  margin: 0;
+  list-style: none;
+}
+
+.goog-filterobsmenuitem-highlight {
+  background-color: #4279a5;
+  color: #fff;
+}
+
+.goog-filterobsmenuitem-disabled {
+  color: #999;
+}
+
+.str {
+  color: #080;
+}
+
+.kwd {
+  color: #008;
+}
+
+.com {
+  color: #800;
+}
+
+.typ {
+  color: #606;
+}
+
+.lit {
+  color: #066;
+}
+
+.pun {
+  color: #660;
+}
+
+.pln {
+  color: #000;
+}
+
+.tag {
+  color: #008;
+}
+
+.atn {
+  color: #606;
+}
+
+.atv {
+  color: #080;
+}
+
+.dec {
+  color: #606;
+}
+
+pre.prettyprint {
+  padding: 2px;
+  border: 1px solid #888;
+}
+
+@media print {
+  .str {
+    color: #060;
+  }
+
+  .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+
+  .com {
+    color: #600;
+    font-style: italic;
+  }
+
+  .typ {
+    color: #404;
+    font-weight: bold;
+  }
+
+  .lit {
+    color: #044;
+  }
+
+  .pun {
+    color: #440;
+  }
+
+  .pln {
+    color: #000;
+  }
+
+  .tag {
+    color: #006;
+    font-weight: bold;
+  }
+
+  .atn {
+    color: #404;
+  }
+
+  .atv {
+    color: #060;
+  }
+}
+
+.goog-tab {
+  position: relative;
+  border: 1px solid #b8b8b8;
+  padding: 4px 8px;
+  color: #333;
+  background: #ddd;
+  cursor: default;
+}
+
+.goog-tab {
+  margin: 1px 4px 0 0;
+  border-bottom: 0;
+  float: left;
+}
+
+.goog-tab-hover {
+  background: #eee;
+}
+
+.goog-tab-disabled {
+  color: #fff;
+  background: #ccc;
+  border-color: #ccc;
+}
+
+.goog-tab.goog-tab-selected {
+  background: #fff;
+  color: #000;
+  margin-top: 0;
+  padding-bottom: 5px;
+  top: 1px;
+}
+
+.goog-tab-bar {
+  position: relative;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  list-style: none;
+  cursor: default;
+  outline: none;
+}
+
+.goog-tab-bar-clear {
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+
+.goog-tab-bar-start {
+  float: left;
+}
+
+.goog-tab-bar-end {
+  float: right;
+}

@@ -1,38 +1,5 @@
 package glosure
 
-import (
-	"net/http"
-	"sync"
-
-	"github.com/soheilhy/glosure/depgraph"
-)
-
-const DefaultCompiledSuffix = ".min.js"
-const DefaultSourceSuffix = ".js"
-
-type CompilationLevel string
-
-const (
-	WhiteSpaceOnly        CompilationLevel = "WHITESPACE_ONLY"
-	SimpleOptimizations                    = "SIMPLE_OPTIMIZATIONS"
-	AdvancedOptimizations                  = "ADVANCED_OPTIMIZATIONS"
-)
-
-type WarningLevel string
-
-const (
-	Quiet   = "QUIET"
-	Default = "DEFAULT"
-	Verbose = "VERBOSE"
-)
-
-type Formatting string
-
-const (
-	PrettyPrint         Formatting = "pretty_print"
-	PrintInputDelimiter            = "print_input_delimiter"
-)
-
 type WarningClass string
 
 const (
@@ -89,30 +56,16 @@ const (
 type Compiler struct {
 	// Path containing all JavaScript sources.
 	Root string
-	// Compiled JavaScript suffix. Uses ".min.js" by default.
-	CompiledSuffix string
-	// JavaScript source suffix. Uses ".js" by default.
-	SourceSuffix string
 
-	// Error handler.
-	ErrorHandler http.HandlerFunc
-
-	// Path of Closure's "compiler.jar". By default Glosure downloads the latest
-	// compiler onto Compiler.Root.
+	// Path of Closure's "compiler.jar".
 	CompilerJarPath string
 
-	// Compile source javascripts if not compiled or out of date.
-	CompileOnDemand bool
-
-	// Closure compiler compilation level. Valid levels are: WhiteSpaceOnly,
-	// SimpleOptimizations (default), AdvancedOptimizations.
-	CompilationLevel CompilationLevel
-	// Closure compiler warning level. Valid levels are: Quite, Default, and
-	// Verbose.
-	WarningLevel WarningLevel
-	// Formatting of the compiled output. Valid formattings are: PrettyPrint,
-	// and PrintInputDelimiter.
-	Formatting Formatting
+	// Closure compiler compilation level. Valid levels are: WhiteSpaceOnly, SimpleOptimizations (default), AdvancedOptimizations.
+	CompilationLevel string
+	// Closure compiler warning level. Valid levels are: Quite, Default, and Verbose.
+	WarningLevel string
+	// Formatting of the compiled output. Valid formattings are: PrettyPrint, and PrintInputDelimiter.
+	Formattings []string
 	// Whether to optimize out all unused JavaScript code.
 	OnlyClosureDependencies bool
 
@@ -132,8 +85,4 @@ type Compiler struct {
 	CompWarnings []WarningClass
 	// Warnings that are suppressed.
 	CompSuppressed []WarningClass
-
-	fileServer http.Handler
-	depg       depgraph.DependencyGraph
-	mutex      sync.Mutex
 }

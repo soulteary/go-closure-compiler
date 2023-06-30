@@ -1,121 +1,226 @@
 package main
 
 import (
-	"flag"
+	"bytes"
+	"compress/gzip"
 	"fmt"
+	"math"
 	"net/http"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
+	"time"
 
-	"github.com/golang/glog"
+	"github.com/gin-gonic/gin"
 	"github.com/soheilhy/glosure"
 )
 
-// To see all logs from the server, run this file as:
-//
-//	go run server.go --logtostderr -v=1
+const OUTPUT_BASE_DIR = "temp"
+const DEFAULT_OUTPUT_FILE_NAME = "default.js"
+
+var (
+	INPUT_DIR  = filepath.Join(OUTPUT_BASE_DIR, "file")
+	OUTPUT_DIR = filepath.Join(OUTPUT_BASE_DIR, "output")
+)
+
+const (
+	ERROR_REQUEST_PARAMETER = "Request parameter error"
+	ERROR_COMPILATION_LEVEL = "Compilation level error"
+	ERROR_WARNING_LEVEL     = "Warning level error"
+)
+
+type Options struct {
+	OutputFormat     string   `form:"output_format"`
+	OutputInfo       []string `form:"output_info"`
+	CompilationLevel string   `form:"compilation_level"`
+	WarningLevel     string   `form:"warning_level"`
+	OutputFileName   string   `form:"output_file_name"`
+	Formatting       []string `form:"formatting"`
+	Code             string   `form:"js_code"`
+}
+
+type ResponseStats struct {
+	OriginalSize       int     `json:"originalSize"`
+	OriginalGzipSize   int     `json:"originalGzipSize"`
+	CompressedSize     int     `json:"compressedSize"`
+	CompressedGzipSize int     `json:"compressedGzipSize"`
+	CompileTime        float64 `json:"compileTime"`
+}
+
+type ResponseError struct {
+	Type   string `json:"type"`
+	File   string `json:"file"`
+	LineNo int    `json:"lineno"`
+	CharNo int    `json:"charno"`
+	Error  string `json:"error"`
+	Line   string `json:"line"`
+}
+
+type Response struct {
+	CompiledCode   string          `json:"compiledCode"`
+	Statistics     ResponseStats   `json:"statistics"`
+	Errors         []ResponseError `json:"errors",omitempty`
+	OutputFilePath string          `json:"outputFilePath"`
+}
+
+func GetGzipSize(input string) int {
+	var buf bytes.Buffer
+	gz := gzip.NewWriter(&buf)
+
+	if _, err := gz.Write([]byte(input)); err != nil {
+		fmt.Println("gzip写入失败:", err)
+		return 0
+	}
+
+	if err := gz.Close(); err != nil {
+		fmt.Println("gzip关闭失败:", err)
+		return 0
+	}
+	return buf.Len()
+}
+
 func main() {
-	debug := flag.Bool("debug", false, "run the compiler in debug mode.")
-	advanced := flag.Bool("advanced", false, "use advanced optimizations.")
+	os.MkdirAll(INPUT_DIR, os.ModePerm)
+	os.MkdirAll(OUTPUT_DIR, os.ModePerm)
 
-	// Parse the flags if you want to use glog.
-	flag.Parse()
+	r := gin.Default()
 
-	// Creat a new compiler.
-	cc := glosure.NewCompiler("./js/")
-	if *debug {
-		cc.Debug()
-	} else {
-		// Use strict mode for the closure compiler. All warnings are treated as
-		// error.
-		cc.Strict()
-	}
+	r.GET("/", func(c *gin.Context) {
+		buf, err := os.ReadFile("./public/index.html")
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		c.Data(http.StatusOK, "text/html; charset=utf-8", buf)
+	})
 
-	if *advanced {
-		// Use advanced optimizations.
-		cc.CompilationLevel = glosure.AdvancedOptimizations
-	}
+	r.Static("/assets", "./public/assets")
+	r.Static("/code", OUTPUT_DIR)
 
-	http.Handle("/", http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		ServeHttp(res, req, &cc)
-	}))
+	r.POST("/compile", func(c *gin.Context) {
+		err := c.Request.ParseForm()
+		if err != nil {
+			c.String(http.StatusBadRequest, ERROR_REQUEST_PARAMETER)
+			return
+		}
 
-	fmt.Println("Checkout http://localhost:8080/sample.min.js?force=1")
-	http.ListenAndServe(":8080", nil)
-}
+		options := Options{
+			OutputFormat:     c.Request.Form.Get("output_format"),
+			OutputInfo:       c.Request.Form["output_info"],
+			CompilationLevel: c.Request.Form.Get("compilation_level"),
+			WarningLevel:     c.Request.Form.Get("warning_level"),
+			OutputFileName:   c.Request.Form.Get("output_file_name"),
+			Code:             c.Request.Form.Get("js_code"),
+			Formatting:       c.Request.Form["formatting"],
+		}
 
-func getSourceJavascriptPath(relPath, root, compiledSuffix, sourceSuffix string) string {
-	return path.Join(root, relPath[:len(relPath)-len(compiledSuffix)]+sourceSuffix)
-}
+		cc := glosure.NewCompiler()
 
-func isCompiledJavascript(path, compiledSuffix string) bool {
-	return strings.HasSuffix(path, compiledSuffix)
-}
+		if !glosure.CheckUserInputCompilationLevel(options.CompilationLevel) {
+			c.String(http.StatusBadRequest, ERROR_COMPILATION_LEVEL)
+			return
+		}
+		cc.SetCompilationLevel(options.CompilationLevel)
 
-func getCompiledJavascriptPath(relPath, root, compiledSuffix, sourceSuffix string) string {
-	if isCompiledJavascript(relPath, compiledSuffix) {
-		return path.Join(root, relPath)
-	}
+		if !glosure.CheckUserInputWarningLevel(options.WarningLevel) {
+			c.String(http.StatusBadRequest, ERROR_WARNING_LEVEL)
+			return
+		}
+		cc.SetWarningLevel(options.WarningLevel)
 
-	return path.Join(root, relPath[:len(relPath)-len(sourceSuffix)]+compiledSuffix)
-}
+		if len(options.Formatting) > 0 {
+			for _, format := range options.Formatting {
+				cc.SetFormattings(format)
+			}
+		}
 
-func sourceFileExists(path, root, compiledSuffix, sourceSuffix string) bool {
-	srcPath := getSourceJavascriptPath(path, root, compiledSuffix, sourceSuffix)
-	_, err := os.Stat(srcPath)
-	return err == nil
-}
+		shouldCompileCode := false
+		shouldShowWarnings := false
+		shouldShowErrors := false
+		shouldShowStatistics := false
 
-// Glosure's main handler function.
-func ServeHttp(res http.ResponseWriter, req *http.Request, cc *glosure.Compiler) {
-	path := req.URL.Path
+		for _, info := range options.OutputInfo {
+			fmt.Println(info)
+			switch info {
+			case "compiled_code":
+				shouldCompileCode = true
+			case "warnings":
+				shouldShowWarnings = true
+			case "errors":
+				shouldShowErrors = true
+			case "statistics":
+				shouldShowStatistics = true
+			}
+		}
 
-	if !strings.HasSuffix(path, cc.CompiledSuffix) {
-		cc.ErrorHandler(res, req)
-		return
-	}
+		if !shouldCompileCode {
+			c.String(http.StatusBadRequest, ERROR_REQUEST_PARAMETER)
+			return
+		}
 
-	if !sourceFileExists(path, cc.Root, cc.CompiledSuffix, cc.SourceSuffix) {
-		cc.ErrorHandler(res, req)
-		return
-	}
+		inputFile := filepath.Join(INPUT_DIR, DEFAULT_OUTPUT_FILE_NAME)
+		os.WriteFile(inputFile, []byte(options.Code), os.ModePerm)
+		outputFile := filepath.Join(OUTPUT_DIR, options.OutputFileName)
 
-	forceCompile := req.URL.Query().Get("force") == "1"
-	if !cc.CompileOnDemand || (!forceCompile && jsIsAlreadyCompiled(path, cc.Root, cc.CompiledSuffix, cc.SourceSuffix)) {
-		http.FileServer(http.Dir(cc.Root)).ServeHTTP(res, req)
-		return
-	}
+		fmt.Println(options)
+		fmt.Println()
 
-	srcPath := getSourceJavascriptPath(path, cc.Root, cc.CompiledSuffix, cc.SourceSuffix)
-	outPath := getCompiledJavascriptPath(getSourceJavascriptPath(path, cc.Root, cc.CompiledSuffix, cc.SourceSuffix), cc.Root, cc.CompiledSuffix, cc.SourceSuffix)
+		startTime := time.Now()
 
-	err := cc.Compile(path, srcPath, outPath)
-	if err != nil {
-		cc.ErrorHandler(res, req)
-		return
-	}
+		err = cc.Compile(inputFile, outputFile)
+		if err != nil {
+			response := Response{CompiledCode: "", OutputFilePath: strings.Replace(outputFile, OUTPUT_DIR, "/code", 1)}
 
-	glog.Info("JavaScript source is successfully compiled: ", path)
-	http.FileServer(http.Dir(cc.Root)).ServeHTTP(res, req)
-}
+			if shouldShowStatistics {
+				response.Statistics = ResponseStats{
+					OriginalSize:       len(options.Code),
+					OriginalGzipSize:   GetGzipSize(options.Code),
+					CompressedSize:     0,
+					CompressedGzipSize: 20,
+					CompileTime:        1,
+				}
+			}
+			// TODO parsing the error message
+			// temp/file/default.js:2:10: ERROR - [JSC_PARSE_ERROR] Parse error. Semi-colon expected
+			// 2| funct1ion hello(name) {
+			// fmt.Println(err.Error())
+			// response.Errors = []ResponseError{}
 
-func jsIsAlreadyCompiled(path, root, compiledSuffix, sourceSuffix string) bool {
-	srcPath := getSourceJavascriptPath(path, root, compiledSuffix, sourceSuffix)
-	srcStat, err := os.Stat(srcPath)
-	if err != nil {
-		return false
-	}
+			fmt.Println(cc.CompErrors)
+			fmt.Println()
+			fmt.Println()
+			fmt.Println()
+			fmt.Println()
+			fmt.Println()
 
-	outPath := getCompiledJavascriptPath(path, root, compiledSuffix, sourceSuffix)
-	outStat, err := os.Stat(outPath)
-	if err != nil {
-		return false
-	}
+			c.JSON(http.StatusOK, response)
+			return
+		}
 
-	if outStat.ModTime().Before(srcStat.ModTime()) {
-		return false
-	}
+		buf, err := os.ReadFile(outputFile)
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
 
-	return true
+		result := string(buf)
+
+		response := Response{CompiledCode: result, OutputFilePath: strings.Replace(outputFile, OUTPUT_DIR, "/code", 1)}
+
+		time := time.Since(startTime).Seconds()
+		if shouldShowStatistics {
+			response.Statistics = ResponseStats{
+				OriginalSize:       len(options.Code),
+				OriginalGzipSize:   GetGzipSize(options.Code),
+				CompressedSize:     len(result),
+				CompressedGzipSize: GetGzipSize(result),
+				CompileTime:        math.Floor(time),
+			}
+		}
+
+		fmt.Println(shouldShowWarnings, shouldShowErrors)
+		c.JSON(http.StatusOK, response)
+	})
+
+	r.Run()
 }
