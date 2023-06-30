@@ -83,7 +83,6 @@ type WarningClass string
 
 const (
 	AccessControls              = "accessControls"
-	AmbiguousFunctionDecl       = "ambiguousFunctionDecl"
 	CheckEventfulObjectDisposal = "checkEventfulObjectDisposal"
 	CheckRegExp                 = "checkRegExp"
 	CheckStructDictInheritance  = "checkStructDictInheritance"
@@ -192,7 +191,7 @@ func (cc *Compiler) Strict() {
 	cc.WarningLevel = Verbose
 	// All of warning classes, except the unknown type.
 	cc.CompErrors = []WarningClass{
-		AccessControls, AmbiguousFunctionDecl, CheckEventfulObjectDisposal,
+		AccessControls, CheckEventfulObjectDisposal,
 		CheckRegExp, CheckStructDictInheritance, CheckTypes, CheckVars, Const,
 		ConstantProperty, Deprecated, DuplicateMessage, Es3, Es5Strict,
 		ExternsValidation, FileoverviewTags, GlobalThis, InternetExplorerChecks,
@@ -210,7 +209,7 @@ func (cc *Compiler) Debug() {
 	cc.WarningLevel = Verbose
 	// All of warning classes, except the unknown type.
 	cc.CompWarnings = []WarningClass{
-		AccessControls, AmbiguousFunctionDecl, CheckEventfulObjectDisposal,
+		AccessControls, CheckEventfulObjectDisposal,
 		CheckRegExp, CheckStructDictInheritance, CheckTypes, CheckVars, Const,
 		ConstantProperty, Deprecated, DuplicateMessage, Es3, Es5Strict,
 		ExternsValidation, FileoverviewTags, GlobalThis, InternetExplorerChecks,
