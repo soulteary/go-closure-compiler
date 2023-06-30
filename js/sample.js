@@ -1,10 +1,9 @@
-goog.provide('glosure');
-
-goog.require('pkg');
-
-glosure.someFunc = function() {
-  pkg.someFunc();
+function helloworld() {
+  alert("Hello World");
 }
 
-glosure.someFunc();
+window.onload = function () {
+  helloworld();
+};
 
+window.helloworld = helloworld;

@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -22,18 +21,6 @@ import (
 	"github.com/golang/glog"
 	"github.com/soheilhy/glosure/depgraph"
 )
-
-// Creates an http.Handler using the closure compiler.
-func GlosureServer(cc Compiler) http.Handler {
-	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		ServeHttp(res, req, &cc)
-	})
-}
-
-// Creates a glosure http handler for the given root directory.
-func GlosureServerWithRoot(root string) http.Handler {
-	return GlosureServer(NewCompiler(root))
-}
 
 func NewCompiler(root string) Compiler {
 	return Compiler{
@@ -44,7 +31,6 @@ func NewCompiler(root string) Compiler {
 		WarningLevel:     Default,
 		SourceSuffix:     DefaultSourceSuffix,
 		CompileOnDemand:  true,
-		fileServer:       http.FileServer(http.Dir(root)),
 		depg:             depgraph.New(),
 		mutex:            sync.Mutex{},
 	}
@@ -87,97 +73,21 @@ func (cc *Compiler) Debug() {
 	cc.Formatting = PrettyPrint
 }
 
-// Glosure's main handler function.
-func ServeHttp(res http.ResponseWriter, req *http.Request, cc *Compiler) {
-	path := req.URL.Path
-
-	if !cc.isCompiledJavascript(path) {
-		cc.ErrorHandler(res, req)
-		return
-	}
-
-	if !cc.sourceFileExists(path) {
-		cc.ErrorHandler(res, req)
-		return
-	}
-
-	forceCompile := req.URL.Query().Get("force") == "1"
-	if !cc.CompileOnDemand || (!forceCompile && cc.jsIsAlreadyCompiled(path)) {
-		cc.fileServer.ServeHTTP(res, req)
-		return
-	}
-
-	err := cc.Compile(path)
-	if err != nil {
-		cc.ErrorHandler(res, req)
-		return
-	}
-
-	glog.Info("JavaScript source is successfully compiled: ", path)
-	cc.fileServer.ServeHTTP(res, req)
-}
-
-func (cc *Compiler) isCompiledJavascript(path string) bool {
-	return strings.HasSuffix(path, cc.CompiledSuffix)
-}
-
 func (cc *Compiler) isSourceJavascript(path string) bool {
 	return strings.HasSuffix(path, cc.SourceSuffix) &&
 		!strings.HasSuffix(path, cc.CompiledSuffix)
 }
 
-func (cc *Compiler) getSourceJavascriptPath(relPath string) string {
-	return path.Join(cc.Root, relPath[:len(relPath)-len(cc.CompiledSuffix)]+
-		cc.SourceSuffix)
-}
-
-func (cc *Compiler) getCompiledJavascriptPath(relPath string) string {
-	if cc.isCompiledJavascript(relPath) {
-		return path.Join(cc.Root, relPath)
-	}
-
-	return path.Join(cc.Root, relPath[:len(relPath)-len(cc.SourceSuffix)]+
-		cc.CompiledSuffix)
-}
-
-func (cc *Compiler) sourceFileExists(path string) bool {
-	srcPath := cc.getSourceJavascriptPath(path)
-	_, err := os.Stat(srcPath)
-	return err == nil
-}
-
-func (cc *Compiler) jsIsAlreadyCompiled(path string) bool {
-	srcPath := cc.getSourceJavascriptPath(path)
-	srcStat, err := os.Stat(srcPath)
-	if err != nil {
-		return false
-	}
-
-	outPath := cc.getCompiledJavascriptPath(path)
-	outStat, err := os.Stat(outPath)
-	if err != nil {
-		return false
-	}
-
-	if outStat.ModTime().Before(srcStat.ModTime()) {
-		return false
-	}
-
-	return true
-}
-
-func (cc *Compiler) Compile(relOutPath string) error {
+func (cc *Compiler) Compile(relOutPath string, srcPath, outPath string) error {
 	_, err := exec.LookPath("java")
 	if err != nil {
 		glog.Fatal("No java found in $PATH.")
 	}
 
+	cc.CompilerJarPath = filepath.Join(cc.Root, "__compiler__.jar")
 	if cc.CompilerJarPath == "" {
 		glog.Fatal("download the closure compiler jar file from https://github.com/google/closure-compiler/tags and put it to js/__compiler__.jar .")
 	}
-
-	srcPath := cc.getSourceJavascriptPath(relOutPath)
-	outPath := cc.getCompiledJavascriptPath(relOutPath)
 
 	srcPkgs, err := getClosurePackage(srcPath)
 	useClosureDeps := err == nil

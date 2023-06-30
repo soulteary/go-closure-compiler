@@ -1,1 +1,1 @@
-# go-closure-compiler
+# Go Closure Compiler
